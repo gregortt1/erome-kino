@@ -1,0 +1,34 @@
+{
+  "id": "erome",
+  "name": "EroMe",
+  "version": "1.0.0",
+  "apiVersion": 8,
+  "entry": "plugin.js",
+  "description": "Vídeos públicos de es.erome.com con sus etiquetas, categorías, autor y visitas",
+  "author": "juandrexter",
+  "hosts": ["erome.com", "*.erome.com"],
+  "capabilities": ["search", "home", "browse", "episodes", "resolve", "download"],
+  "categories": ["movies", "adult"],
+  "color": "#EB6395",
+  "icon": "icon.png",
+  "settings": [
+    {
+      "key": "domain",
+      "label": "Dominio",
+      "type": "select",
+      "default": "es.erome.com",
+      "hint": "El sitio que se recorre",
+      "options": [
+        { "value": "es.erome.com", "label": "es.erome.com" },
+        { "value": "www.erome.com", "label": "www.erome.com" }
+      ]
+    },
+    {
+      "key": "showTags",
+      "label": "Etiquetas en la sinopsis",
+      "type": "toggle",
+      "default": true,
+      "hint": "Añade las etiquetas detectadas al texto de cada título"
+    }
+  ]
+}

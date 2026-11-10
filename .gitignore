@@ -1,0 +1,8 @@
+node_modules/
+*.log
+.kino-cookies.json
+.kino-shared.json
+.kino-state.json
+.kino-record.json
+.DS_Store
+Thumbs.db
