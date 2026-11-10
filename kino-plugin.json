@@ -6,6 +6,7 @@
   "entry": "plugin.js",
   "description": "Vídeos públicos de es.erome.com con sus etiquetas, categorías, autor y visitas",
   "author": "juandrexter",
+  "discoverable": false,
   "hosts": ["erome.com", "*.erome.com"],
   "capabilities": ["search", "home", "browse", "episodes", "resolve", "download"],
   "categories": ["movies", "adult"],

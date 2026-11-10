@@ -44,6 +44,18 @@ real del sitio, no del plugin.
   of Kino".
 - Desbloquear el **código 18+** en Kino o el plugin se ve vacío (ver abajo).
 
+## Uso privado
+
+Este plugin es de uso personal y **no aparece en la tienda de Kino** ("De la comunidad"). Dos
+candados, y basta con uno:
+
+1. El repo **no lleva el topic `kino-plugin`**, que es lo único que hace que Kino lo descubra.
+2. El manifiesto dice `"discoverable": false`, así que Kino lo salta aunque alguien le ponga el topic.
+   `node sdk/validate.mjs .` lo imprime: *"No aparecerá en la búsqueda de Kino"*.
+
+Se instala solo si escribes la dirección exacta. El repo tiene que seguir siendo **público**: Kino
+lee `raw.githubusercontent.com` sin credenciales, y un repo privado le responde "not found".
+
 ---
 
 ## Instalación
@@ -67,13 +79,16 @@ git remote add origin https://github.com/TU-USUARIO/erome-kino.git
 git push -u origin main
 ```
 
+No añadas el topic `kino-plugin` ni quites `"discoverable": false` si quieres seguir fuera de la
+tienda.
+
 ### 2. Instalarlo en Kino
 
 En el móvil o en la TV:
 
 1. **Ajustes ▸ Plugins ▸ Agregar**.
-2. Escribe `TU-USUARIO/erome-kino` (o pega
-   `https://raw.githubusercontent.com/TU-USUARIO/erome-kino/main/kino-plugin.json`).
+2. Escribe `Gregortt1/erome-kino` (o pega
+   `https://raw.githubusercontent.com/Gregortt1/erome-kino/main/kino-plugin.json`).
 3. Kino enseña la hoja de permisos. Acepta. Pide:
    - `erome.com` y `*.erome.com` (el sitio y las CDN `v78.erome.com`, `s1.erome.com`, …)
    - Descargar vídeos para verlos sin conexión.
