@@ -440,8 +440,6 @@ const HOME_ROWS = [
   { id: "populares", title: "Populares", path: "/explore" },
   { id: "nuevos", title: "Nuevos", path: "/explore/new" },
   { id: "hetero", title: "Hetero", path: "/version/straight" },
-  { id: "trans", title: "Trans", path: "/version/trans" },
-  { id: "gay", title: "Gay", path: "/version/gay" },
   { id: "hentai", title: "Hentai", path: "/version/hentai" },
   { id: "latinas", title: "Latinas", path: "/search?q=latina" },
   { id: "milf", title: "MILF", path: "/search?q=milf" },
@@ -569,6 +567,11 @@ export async function search(query) {
   const q = String((query && query.q) || "").trim();
   if (!q) return [];
 
+  // `query.within` llega cuando la persona busca dentro de una fila ("Ver más").
+  // Sin esto Kino filtra en local los ~36 títulos ya cargados y una palabra que
+  // no esté entre ellos no devuelve nada. EroMe no tiene búsqueda por categoría,
+  // así que se contesta con la búsqueda global del sitio: resultados reales
+  // desde cualquier pantalla.
   const raw = query && query.cursor ? Number(query.cursor) : 1;
   const page = isFinite(raw) && raw >= 1 ? Math.floor(raw) : 1;
 
