@@ -5,8 +5,6 @@ Plugin de [Kino](https://github.com/kinotvapp/kino-light) que trae los vídeos p
 
 ## Qué hace
 
-- **Sección propia** con pestañas (Inicio y Etiquetas), portada destacada y filas con "Ver más".
-- **Categorías** con una tarjeta por etiqueta, dentro de la pantalla Categorías de Kino.
 - **Inicio** con 7 filas: Populares, Nuevos, Hetero, Hentai, Latinas, MILF, Amateur.
 - **Búsqueda** en el sitio, con páginas siguientes. Funciona igual desde cualquier pantalla: si
   buscas dentro de una fila, la busca en todo el sitio, no solo entre lo ya cargado.

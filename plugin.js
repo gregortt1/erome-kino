@@ -446,13 +446,13 @@ const HOME_ROWS = [
   { id: "amateur", title: "Amateur", path: "/search?q=amateur" },
 ];
 
-async function loadRows(defs) {
+export async function home() {
   const settled = await Promise.allSettled(
-    defs.map(async (def) => {
-      const url = site() + def.path;
+    HOME_ROWS.map(async (row) => {
+      const url = site() + row.path;
       const html = await getHtml(url);
-      const items = parseListing(html, def.title);
-      return { id: def.id, title: def.title, ref: url, genre: "peliculas", items: items };
+      const items = parseListing(html, row.title);
+      return { id: row.id, title: row.title, ref: url, genre: "peliculas", items: items };
     })
   );
 
@@ -462,7 +462,7 @@ async function loadRows(defs) {
     if (answer.status !== "fulfilled") {
       const reason = answer.reason && answer.reason.message ? answer.reason.message : "error";
       try {
-        kino.log("fila " + defs[i].id + " falló: " + reason);
+        kino.log("fila " + HOME_ROWS[i].id + " falló: " + reason);
       } catch (e) {
         // el log no puede romper la fila
       }
@@ -472,99 +472,6 @@ async function loadRows(defs) {
     rows.push(answer.value);
   }
   return rows;
-}
-
-export async function home() {
-  return loadRows(HOME_ROWS);
-}
-
-// ---------------------------------------------------------------------------
-// Sección propia: pestañas, hero y filas (apiVersion 6)
-// ---------------------------------------------------------------------------
-const SECTION_TABS = [
-  { id: "inicio", label: "Inicio" },
-  { id: "etiquetas", label: "Etiquetas" },
-];
-
-const TAG_TAB_LABELS = [
-  "Lesbianas",
-  "Anal",
-  "Creampie",
-  "Rubias",
-  "Morenas",
-  "Asiáticas",
-  "Tetas grandes",
-  "Culonas",
-];
-
-function tagRowDefs(labels) {
-  return labels.map((label, i) => ({
-    id: "tag-" + i,
-    title: label,
-    path: "/search?q=" + encodeURIComponent(TAGS[label].query),
-  }));
-}
-
-// El hero usa el primer título con póster de la primera fila: sin llamadas extra.
-function heroFrom(rows) {
-  for (let i = 0; i < rows.length; i++) {
-    const item = rows[i].items && rows[i].items[0];
-    if (item && item.poster) {
-      return {
-        title: item.title,
-        text: String(item.overview || "").slice(0, 300),
-        image: item.poster,
-      };
-    }
-  }
-  return undefined;
-}
-
-export async function section(arg) {
-  const tab = arg && arg.tab;
-  const chosen = SECTION_TABS.some((t) => t.id === tab) ? tab : "inicio";
-  const rows = await loadRows(chosen === "etiquetas" ? tagRowDefs(TAG_TAB_LABELS) : HOME_ROWS);
-  return {
-    tabs: SECTION_TABS,
-    tab: chosen,
-    hero: chosen === "inicio" ? heroFrom(rows) : undefined,
-    rows: rows,
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Categorías: una tarjeta por etiqueta (apiVersion 6)
-// ---------------------------------------------------------------------------
-const CATEGORY_LABELS = [
-  "Lesbianas",
-  "Anal",
-  "Creampie",
-  "Rubias",
-  "Morenas",
-  "Asiáticas",
-  "Culonas",
-  "Amateur",
-];
-
-export async function categories() {
-  const settled = await Promise.allSettled(
-    CATEGORY_LABELS.map(async (label, i) => {
-      const url = site() + "/search?q=" + encodeURIComponent(TAGS[label].query);
-      const html = await getHtml(url);
-      const items = parseListing(html, label);
-      let art = "";
-      for (let k = 0; k < items.length && !art; k++) {
-        if (items[k].poster) art = items[k].poster;
-      }
-      return { id: "cat-" + i, title: label, ref: url, art: art || undefined, adult: true };
-    })
-  );
-
-  const tiles = [];
-  for (let i = 0; i < settled.length; i++) {
-    if (settled[i].status === "fulfilled") tiles.push(settled[i].value);
-  }
-  return tiles;
 }
 
 // ---------------------------------------------------------------------------
