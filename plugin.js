@@ -299,9 +299,12 @@ function parseListing(html, category) {
 
 function lastPageOf(html, current) {
   let last = current;
+  // El sitio escapa el separador en los enlaces: `?q=x&amp;page=7`. Sin desescapar
+  // solo coincide el `rel="next"`, y el plugin cree que hay 2 páginas y corta ahí.
+  const text = String(html == null ? "" : html).replace(/&amp;/gi, "&");
   const re = /[?&]page=(\d+)/g;
   let m;
-  while ((m = re.exec(html)) !== null) {
+  while ((m = re.exec(text)) !== null) {
     const n = Number(m[1]);
     if (isFinite(n) && n > last) last = n;
   }
