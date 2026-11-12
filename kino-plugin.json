@@ -1,7 +1,7 @@
 {
   "id": "erome",
   "name": "EroMe",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "apiVersion": 8,
   "entry": "plugin.js",
   "description": "Vídeos públicos de es.erome.com con sus etiquetas, categorías, autor y visitas",

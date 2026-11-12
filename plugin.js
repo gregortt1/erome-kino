@@ -42,6 +42,10 @@ async function getHtml(url) {
       "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
       Referer: site() + "/explore",
     },
+    // Sin cookies a propósito: al pasar por /version/straight el sitio deja una
+    // cookie `erome_version` que recorta la búsqueda a un puñado de resultados
+    // (36 → 1 en "petera"). Sin ella el sitio devuelve la página completa.
+    cookies: false,
     timeoutMs: 15000,
   });
   if (!r.ok) throw kino.error("unavailable", "erome respondió " + r.status);
