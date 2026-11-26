@@ -6,8 +6,8 @@ Plugin de [Kino](https://github.com/kinotvapp/kino-light) que trae los vídeos p
 ## Qué hace
 
 - **Inicio** con 7 filas: Populares, Nuevos, Hetero, Hentai, Latinas, MILF, Amateur.
-- **Búsqueda** en el sitio, con páginas siguientes. Funciona igual desde cualquier pantalla: si
-  buscas dentro de una fila, la busca en todo el sitio, no solo entre lo ya cargado.
+- **Búsqueda** desde el buscador de una fila ("Ver más"): busca en todo el sitio, con páginas
+  siguientes, no solo entre lo ya cargado. La búsqueda general de Kino no muestra nada de EroMe.
 - **Ver más** en cada fila, 36 álbumes por página.
 - **Álbum de un vídeo** → película. **Álbum con varios** → serie, un capítulo por vídeo.
 - Cada título muestra **autor, visitas, número de vídeos y etiquetas**.

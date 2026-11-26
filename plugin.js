@@ -34,7 +34,7 @@ function showTags() {
 // ---------------------------------------------------------------------------
 // HTTP
 // ---------------------------------------------------------------------------
-async function getHtml(url) {
+async function getHtml(url, timeoutMs) {
   const r = await kino.fetch(url, {
     headers: {
       "User-Agent": UA,
@@ -46,7 +46,7 @@ async function getHtml(url) {
     // cookie `erome_version` que recorta la búsqueda a un puñado de resultados
     // (36 → 1 en "petera"). Sin ella el sitio devuelve la página completa.
     cookies: false,
-    timeoutMs: 15000,
+    timeoutMs: timeoutMs || 15000,
   });
   if (!r.ok) throw kino.error("unavailable", "erome respondió " + r.status);
   return r.text();
@@ -571,33 +571,24 @@ function searchUrl(query, page) {
 }
 
 export async function search(query) {
-  const q = String((query && query.q) || "").trim();
+  // La búsqueda general de Kino (películas y series) llama `search` sin `within`.
+  // Este plugin es +18 y no debe ensuciar esa pantalla, así que ahí contesta vacío.
+  // `within` llega solo desde una página "Ver más" de sus propias filas: ese es el
+  // único lugar donde EroMe responde.
+  if (!query || !query.within) return [];
+
+  const q = String(query.q || "").trim();
   if (!q) return [];
 
-  // `query.within` llega cuando la persona busca dentro de una fila ("Ver más").
-  // Sin esto Kino filtra en local los ~36 títulos ya cargados y una palabra que
-  // no esté entre ellos no devuelve nada. EroMe no tiene búsqueda por categoría,
-  // así que se contesta con la búsqueda global del sitio: resultados reales
-  // desde cualquier pantalla.
-  const raw = query && query.cursor ? Number(query.cursor) : 1;
+  // Sin la búsqueda del sitio, Kino filtra en local los ~36 títulos ya cargados y
+  // una palabra que no esté entre ellos no devuelve nada. EroMe no tiene búsqueda
+  // por categoría, así que se contesta con la búsqueda global del sitio: desde una
+  // fila se busca en todo EroMe, no solo entre lo cargado.
+  const raw = query.cursor ? Number(query.cursor) : 1;
   const page = isFinite(raw) && raw >= 1 ? Math.floor(raw) : 1;
 
-  const html = await getHtml(searchUrl(q, page));
-  let items = parseListing(html, "Buscar");
-
-  // Si el título no aparece con lo tecleado, se prueban los títulos que Kino conoce.
-  if (!items.length && page === 1) {
-    const forms = [];
-    const given = [query.originalTitle].concat(Array.isArray(query.altTitles) ? query.altTitles : []);
-    for (let i = 0; i < given.length && forms.length < 2; i++) {
-      const text = String(given[i] || "").trim();
-      if (text && text.toLowerCase() !== q.toLowerCase() && forms.indexOf(text) === -1) forms.push(text);
-    }
-    for (let i = 0; i < forms.length && !items.length; i++) {
-      const extra = await getHtml(searchUrl(forms[i], 1));
-      items = parseListing(extra, "Buscar");
-    }
-  }
+  const html = await getHtml(searchUrl(q, page), 12000);
+  const items = parseListing(html, "Buscar");
 
   const last = lastPageOf(html, page);
   return { items: items, next: page < last ? String(page + 1) : undefined };
